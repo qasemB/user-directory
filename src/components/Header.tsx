@@ -1,21 +1,42 @@
+import { Link, NavLink, useLocation } from "react-router-dom";
+import { navigationItems } from "../config/navigation";
+
 export default function Header () {
+    const { pathname } = useLocation();
+
+    const currentItem =
+        navigationItems.find( ( item ) => item.path === pathname ) ??
+        navigationItems[ 0 ];
+
     return (
         <header className="header">
-            <a className="brand" href="/" aria-label="User Directory Home">
-                <span className="brand-icon">U</span>
-                <span>User<span className="brand-accent">Space</span></span>
-            </a>
+            <div className="header-top">
+                <Link className="brand" to="/" aria-label="User Directory Home">
+                    <span className="brand-icon">U</span>
+                    <span>User<span className="brand-accent">Space</span></span>
+                </Link>
+
+                <nav className="main-nav" aria-label="Main navigation">
+                    { navigationItems.map( ( item ) => (
+                        <NavLink
+                            key={ item.path }
+                            to={ item.path }
+                            end={ item.path === "/" }
+                            className="nav-link"
+                        >
+                            { item.label }
+                        </NavLink>
+                    ) ) }
+                </nav>
+            </div>
 
             <div className="header-content">
                 <span className="header-badge">
                     <span className="status-dot" />
-                    TEAM DIRECTORY
+                    { currentItem.badge }
                 </span>
-                <h1>People make the difference.</h1>
-                <p>
-                    Discover your people, explore profiles, and find the
-                    right connections.
-                </p>
+                <h1>{ currentItem.title }</h1>
+                <p>{ currentItem.description }</p>
             </div>
         </header>
 
